@@ -22,6 +22,10 @@ class PostListTests(APITestCase):
         self.assertEqual(posts[1]['title'], 'Post 2')
         self.assertEqual(posts[2]['title'], 'Post 1')  # Oldest
 
+        self.post1.delete()
+        self.post2.delete()
+        self.post3.delete()
+
     def test_add_post(self):
         url = reverse('post-list')
         data = {'title': 'Lorem Ipsum test', 'content': 'Lorem ipsum dolor sit amet'}
