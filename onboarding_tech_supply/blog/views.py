@@ -14,7 +14,12 @@ class PostList(APIView):
             post = serializer.save()
             return Response({'id': post.id}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
+    def get(self, request):
+        posts = Post.objects.order_by('-created_at')
+        serializer = PostSerializer(posts, many = True)
+        return Response(serializer.data)
+    
 class UpdateAutor(APIView):
     def patch(self, request, post_id):
         new_autor_name = request.data.get('autor')

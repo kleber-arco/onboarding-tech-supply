@@ -6,6 +6,22 @@ from .models import Post
 # Create your tests here.
 
 class PostListTests(APITestCase):
+    def test_list_posts_descending_order(self):
+        self.post1 = Post.objects.create(title='Post 1', content='Content of post 1')
+        self.post2 = Post.objects.create(title='Post 2', content='Content of post 2')
+        self.post3 = Post.objects.create(title='Post 3', content='Content of post 3')
+
+        url = reverse('post-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        # Verify if posts are returned in correct order
+        posts = response.data
+        self.assertEqual(len(posts), 3)
+        self.assertEqual(posts[0]['title'], 'Post 3')  # Most recent
+        self.assertEqual(posts[1]['title'], 'Post 2')
+        self.assertEqual(posts[2]['title'], 'Post 1')  # Oldest
+
     def test_add_post(self):
         url = reverse('post-list')
         data = {'title': 'Lorem Ipsum test', 'content': 'Lorem ipsum dolor sit amet'}
