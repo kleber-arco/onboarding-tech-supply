@@ -65,3 +65,24 @@ class UpdateAutorTests(APITestCase):
         response = self.client.patch(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+class SpecificPostTests(APITestCase):
+    def setUp(self):
+        self.post = Post.objects.create(title='Lorem Ipsum test', content='Lorem ipsum dolor sit amet', autor='John Doe')
+    
+    def test_get_post(self):
+        url = reverse('specific-post', kwargs={'post_id': self.post.id})
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(Post.objects.count(), 1)
+        self.assertEqual(self.post.title, 'Lorem Ipsum test')
+        self.assertEqual(self.post.content, 'Lorem ipsum dolor sit amet')
+        self.assertEqual(self.post.autor, 'John Doe')
+    
+    def test_invalid_post(self):
+        url = reverse('specific-post', kwargs={'post_id': 999}) # invalid post_id
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
