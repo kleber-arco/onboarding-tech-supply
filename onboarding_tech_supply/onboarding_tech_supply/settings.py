@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os 
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -75,14 +77,24 @@ WSGI_APPLICATION = 'onboarding_tech_supply.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+environ.Env.read_env(env_file='.env')
+
+DEBUG = env('DEBUG')
+SECRET_KEY = env('SECRET_KEY', default='your-secret-key')
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'local_password',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'NAME': env('POSTGRES_DB'),
+        'USER': env('POSTGRES_USER'),
+        'PASSWORD': env('POSTGRES_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT', default='5432'),
     }
 }
 

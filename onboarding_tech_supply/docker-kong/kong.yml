@@ -1,0 +1,19 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+  - name: example_service
+    url: http://httpbin.org:80
+    routes:
+    - name: example_route
+      paths:
+      - /mock
+      strip_path: true
+  
+  - name: blog_get_posts_service
+    url: http://django:8080/api/v1/posts/
+    routes:
+      - name: blog_route
+        paths:
+          - /blog
+        strip_path: true
