@@ -30,6 +30,7 @@ services:
       - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,django
     depends_on:
       - database
+      - keycloak
     networks:
       - kong-net
     
@@ -57,4 +58,16 @@ services:
       - "127.0.0.1:8444:8444"
     depends_on:
       - django
+      - keycloak
     restart: always
+  
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.4
+    ports:
+      - "8081:8080"
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    networks:
+      - kong-net
+    command: start-dev
